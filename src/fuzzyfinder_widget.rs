@@ -122,31 +122,31 @@ impl FzzWidgetState {
         Self::default()
     }
 
-    // This should be set to allow the list to be updated from its thread
+    /// This should be set to allow the list to be updated from its thread
     pub fn set_tx(&mut self, sender: Sender<Event>) {
         self.tx = Some(sender);
     }
 
     // ------------ | List control logic | -----------
 
-    // add char to search input
+    /// add char to search input
     pub fn push_char(&mut self, c: char) {
         self.search_input.push_str(c.to_string().as_str());
         self.should_refresh();
     }
 
-    // remove a char from the input
+    /// remove a char from the input
     pub fn pop_char(&mut self) {
         self.search_input.pop();
         self.should_refresh();
     }
 
-    // move the cursor up to the next item
+    /// move the cursor up to the next item
     pub fn up(&mut self) {
         self.state.select_next();
     }
 
-    // move the cursor down to the prev item
+    /// move the cursor down to the prev item
     pub fn down(&mut self) {
         self.state.select_previous();
     }
@@ -235,7 +235,8 @@ impl FzzWidgetState {
 
     // ------------ | Selectin logic | -----------
 
-    // call this function to select a item from the list, this can then be retreived via
+    // call this function to select a item from the list,
+    // this can then be retreived via
     // self.get_selected
     pub fn select_item(&mut self) {
         if let Some(index) = self.state.selected() {

@@ -71,7 +71,7 @@ impl Event {
 
         while let Some(Ok(line)) = lines.next() {
             list.push(line);
-
+            
             if (now.elapsed() >= Duration::from_millis(100)) || (list.len() > 10000) {
                 let _ = tx.send(Event::AddList(std::mem::take(&mut list)));
                 now = Instant::now();
