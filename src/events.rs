@@ -7,12 +7,12 @@ use std::{
 
 use crossterm::event::{self, KeyEvent};
 
-use crate::Fzz;
+use crate::{fuzzyfinder_widget::SortedList, Fzz};
 
 pub enum Event {
     Input(KeyEvent),
     AddList(Vec<String>),
-    RefreshList(Vec<(usize, String, f64)>),
+    RefreshList(SortedList),
 }
 
 impl Event {
@@ -51,7 +51,7 @@ impl Event {
 }
 
 impl Event {
-    fn spaw_event_thread(tx: Sender<Event>) {
+    fn spawn_event_thread(tx: Sender<Event>) {
         loop {
             match event::read().expect("Failed to read event") {
                 event::Event::Key(key_event) => match tx.send(Event::Input(key_event)) {
@@ -87,7 +87,7 @@ impl Event {
         let (event_tx, event_rx) = channel::<Event>();
         let key_event_tx = event_tx.clone();
         let std_event_tx = event_tx.clone();
-        let _ = thread::spawn(|| Event::spaw_event_thread(key_event_tx));
+        let _ = thread::spawn(|| Event::spawn_event_thread(key_event_tx));
         let _ = thread::spawn(|| Event::spawn_stdin_thread(std_event_tx));
 
         (event_rx, event_tx)

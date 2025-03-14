@@ -1,6 +1,7 @@
-pub mod events;
-pub mod fuzzyfinder_widget;
-pub mod tty;
+mod events;
+mod fuzzyfinder_widget;
+mod tty;
+mod utils;
 
 use events::Event;
 use fuzzyfinder_widget::{FzzWidget, FzzWidgetState};
