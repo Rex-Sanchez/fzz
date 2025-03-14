@@ -55,7 +55,7 @@ impl FzzWidget {
                                 .stdin
                                 .read()
                                 .expect("this should not fail")
-                                .split(&state.delimiter.clone().to_string())
+                                .par_split(state.delimiter)
                                 .count()
                         ))
                         .title_alignment(ratatui::layout::Alignment::Right),
@@ -123,8 +123,9 @@ impl FzzWidgetState {
     }
 
     /// This should be set to allow the list to be updated from its thread
-    pub fn set_tx(&mut self, sender: Sender<Event>) {
+    pub fn set_tx(mut self, sender: Sender<Event>) -> Self {
         self.tx = Some(sender);
+        self
     }
 
     // ------------ | List control logic | -----------
@@ -263,7 +264,7 @@ impl FzzWidgetState {
 
     // ------------ | Setup logic | -----------
 
-    pub fn set_args(mut self, args: &mut AppArgs) -> Self {
+    pub fn set_args(mut self, args: &AppArgs) -> Self {
         self.threshold = args.threshold.unwrap_or(0.2);
         self.case_insesative = args.case_sesative.unwrap_or(false);
         self.delimiter = args.delimiter.unwrap_or('\n');
