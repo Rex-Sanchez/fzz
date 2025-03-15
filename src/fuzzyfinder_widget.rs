@@ -1,6 +1,6 @@
 use std::sync::mpsc::Sender;
 use std::sync::{Arc, RwLock};
-
+use std::{iter, string};
 
 use rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
 use rayon::slice::ParallelSliceMut;
@@ -15,11 +15,9 @@ use ratatui::{
     widgets::{Block, List, ListState, StatefulWidget},
 };
 
-use rust_fuzzy_search::fuzzy_compare;
-
 use crate::AppArgs;
 use crate::events::Event;
-use crate::utils::Job;
+use crate::utils::{Job, contains_fuzzy_search, trigram_fuzzy_compare};
 
 pub struct FzzWidget;
 
@@ -165,6 +163,7 @@ impl FzzWidgetState {
     // input change, or when a chuck is received from stdin when the sort is dont the list is send
     // over channel with event Event::RefreshList
     pub fn should_refresh(&self) {
+        #[derive(Debug)]
         struct Data {
             list: Arc<RwLock<String>>,
             case_sensative: bool,
@@ -202,12 +201,16 @@ impl FzzWidgetState {
                     }
 
                     let score = if !s.search_text.is_empty() {
-                        fuzzy_compare(&s.search_text, &value) as f64
+                        if s.search_text.len() < 3 {
+                            contains_fuzzy_search(&s.search_text, &value) as f64
+                        } else {
+                            trigram_fuzzy_compare(&s.search_text, &value) as f64
+                        }
                     } else {
                         0.0
                     };
 
-                    if s.search_text.len() < 3 || (score > s.threshold) {
+                    if s.search_text.is_empty() || (score > s.threshold) {
                         Some(SortedListItem {
                             text: value,
                             index,
