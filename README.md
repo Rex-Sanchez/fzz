@@ -1,6 +1,6 @@
 # Fzz a fuzzy finder for the terminal
 
-Fzz is a fuzzy finder match like fzf, but blazingly fast.
+Fzz is a fuzzy finder match like fzf.
 
 
 ## Usage

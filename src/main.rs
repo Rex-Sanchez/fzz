@@ -27,9 +27,11 @@ pub struct AppArgs {
 }
 
 fn main() -> Result<(), Error> {
-    if let Some(o) = Fzz::new().render()? {
-        println!("{}", o);
-    }
+    match Fzz::new().render() {
+        Ok(Some(o)) => println!("{}", o),
+        Err(e) => eprintln!("{}", e.to_string()),
+        _ => (),
+    };
 
     Ok(())
 }

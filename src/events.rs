@@ -5,7 +5,10 @@ use std::{
     time::{Duration, Instant},
 };
 
-use crossterm::event::{self, KeyEvent};
+use crossterm::{
+    event::{self, KeyEvent},
+    tty::IsTty,
+};
 
 use crate::fuzzyfinder_widget::SortedList;
 
@@ -13,9 +16,8 @@ pub enum Event {
     Input(KeyEvent),
     AddList(Vec<String>),
     RefreshList(SortedList),
+    NoStdin,
 }
-
-
 
 pub struct WorkerThreads {
     pub tx: Sender<Event>,
@@ -47,23 +49,31 @@ impl WorkerThreads {
         }
     }
     fn spawn_stdin_thread(tx: Sender<Event>) {
-        let stdin = BufReader::new(std::io::stdin());
-        let mut lines = stdin.lines();
-        let mut list: Vec<String> = Vec::new();
+        let stdin = std::io::stdin();
 
-        let mut now = Instant::now();
+        if !stdin.is_tty() {
+            let stdin = BufReader::new(stdin);
+            let mut lines = stdin.lines();
+            let mut list: Vec<String> = Vec::new();
 
-        while let Some(Ok(line)) = lines.next() {
-            list.push(line);
+            let mut now = Instant::now();
 
-            if (now.elapsed() >= Duration::from_millis(100)) || (list.len() > 10000) {
+            while let Some(Ok(line)) = lines.next() {
+                list.push(line);
+
+                if now.elapsed() >= Duration::from_millis(100) {
+                    let _ = tx.send(Event::AddList(std::mem::take(&mut list)));
+                    now = Instant::now();
+                }
+            }
+
+            if !list.is_empty() {
                 let _ = tx.send(Event::AddList(std::mem::take(&mut list)));
-                now = Instant::now();
             }
         }
+        else{
+            let _ = tx.send(Event::NoStdin);
 
-        if !list.is_empty() {
-            let _ = tx.send(Event::AddList(std::mem::take(&mut list)));
         }
     }
 }
