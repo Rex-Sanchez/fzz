@@ -17,7 +17,7 @@ use ratatui::{
 
 use crate::AppArgs;
 use crate::events::Event;
-use crate::utils::{Job, contains_fuzzy_search, trigram_fuzzy_compare};
+use crate::utils::{Job, contains_fuzzy_search, trigram_fuzzy_search};
 
 pub struct FzzWidget;
 
@@ -204,7 +204,7 @@ impl FzzWidgetState {
                         if s.search_text.len() < 3 {
                             contains_fuzzy_search(&s.search_text, &value) as f64
                         } else {
-                            trigram_fuzzy_compare(&s.search_text, &value) as f64
+                            trigram_fuzzy_search(&s.search_text, &value) as f64
                         }
                     } else {
                         0.0
