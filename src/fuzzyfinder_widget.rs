@@ -1,6 +1,5 @@
 use std::sync::mpsc::Sender;
 use std::sync::{Arc, RwLock};
-use std::{iter, string};
 
 use rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
 use rayon::slice::ParallelSliceMut;
