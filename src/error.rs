@@ -4,7 +4,6 @@ use std::{fmt::Display, io, sync::mpsc::RecvError};
 pub enum Error {
     UnableToDraw { from: &'static str, e: io::Error },
     EventReceiveError(RecvError),
-    NoStdin,
 }
 
 impl std::error::Error for Error {}
@@ -14,7 +13,6 @@ impl Display for Error {
         match self {
             Error::UnableToDraw { from, e } => f.write_str(&format!("Unable To Draw: {from}\n{e}")),
             Error::EventReceiveError(e) => f.write_str(&format!("Event Receive Error: {e}")),
-            Error::NoStdin => f.write_str(&format!("Nothing to do")),
         }
     }
 }

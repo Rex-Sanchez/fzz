@@ -37,8 +37,6 @@ impl Fzz {
             self.update()?
         }
 
-        self.tty.restore();
-
         Ok(self.fzz_state.get_selected())
     }
 
@@ -47,7 +45,7 @@ impl Fzz {
             Event::Input(key_event) => self.handel_key_events(key_event),
             Event::AddList(s) => self.fzz_state.add_list(s),
             Event::RefreshList(v) => self.fzz_state.refresh_list(v),
-            Event::NoStdin => return self.no_stdin(),
+            Event::NoStdin => self.exit(),
         };
 
         Ok(())
@@ -68,12 +66,11 @@ impl Fzz {
                     self.fzz_state.down();
                 }
                 event::KeyCode::Enter => {
-                    self.exit = true;
                     self.fzz_state.select_item();
+                    self.exit();
                 }
-                event::KeyCode::Esc => {
-                    self.exit = true;
-                }
+                event::KeyCode::Esc => self.exit(),
+
                 _ => (),
             },
             _ => (),
@@ -91,8 +88,8 @@ impl Fzz {
         Ok(())
     }
 
-    fn no_stdin(&mut self ) -> Result<(),Error> {
+    fn exit(&mut self) {
+        self.exit = true;
         self.tty.restore();
-        Err(Error::NoStdin)
     }
 }

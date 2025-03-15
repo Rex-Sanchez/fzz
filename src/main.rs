@@ -25,10 +25,10 @@ pub struct AppArgs {
     pub threshold: Option<f64>,
 }
 
-fn main() {
-    match Fzz::new().render() {
-        Ok(Some(o)) => println!("{}", o),
-        Err(e) => eprintln!("{}", e.to_string()),
+fn main() -> Result<(), crate::error::Error> {
+    match Fzz::new().render()? {
+        Some(o) => println!("{}", o),
         _ => (),
     };
+    Ok(())
 }
