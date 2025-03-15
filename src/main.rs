@@ -6,7 +6,6 @@ mod tty;
 mod utils;
 
 use clap::Parser;
-use error::Error;
 use events::Event;
 use fzz::Fzz;
 
@@ -26,12 +25,10 @@ pub struct AppArgs {
     pub threshold: Option<f64>,
 }
 
-fn main() -> Result<(), Error> {
+fn main() {
     match Fzz::new().render() {
         Ok(Some(o)) => println!("{}", o),
         Err(e) => eprintln!("{}", e.to_string()),
         _ => (),
     };
-
-    Ok(())
 }
