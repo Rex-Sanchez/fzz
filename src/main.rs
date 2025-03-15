@@ -19,7 +19,7 @@ pub struct AppArgs {
 
     /// Case insensative search
     #[arg(long, short, action)]
-    pub case_sesative: Option<bool>,
+    pub case_sensative: Option<bool>,
 
     /// Filter threshold 0.0 - 1.0
     #[arg(long, short)]

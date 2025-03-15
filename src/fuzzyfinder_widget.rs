@@ -34,7 +34,7 @@ impl FzzWidget {
         Layout::vertical([Constraint::Min(0), Constraint::Length(3)]).areas(area)
     }
     fn draw_search_list(area: Rect, buf: &mut Buffer, state: &mut FzzWidgetState) {
-        StatefulWidget::render(
+        StatefulWidget::render( 
             List::new(state.get_sorted_list())
                 .highlight_symbol("|> ")
                 .highlight_style(
@@ -276,7 +276,7 @@ impl FzzWidgetState {
 
     pub fn set_args(mut self, args: &AppArgs) -> Self {
         self.threshold = args.threshold.unwrap_or(0.2);
-        self.case_insesative = args.case_sesative.unwrap_or(false);
+        self.case_insesative = args.case_sensative.unwrap_or(false);
         self.delimiter = args.delimiter.unwrap_or('\n');
         self
     }

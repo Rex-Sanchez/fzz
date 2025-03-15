@@ -87,6 +87,7 @@ pub fn trigram_fuzzy_search(a: &str, b: &str) -> f32 {
         0f32
     }
 }
+
 pub fn contains_fuzzy_search(a: &str, b: &str) -> f32 {
     let s_a = a.split("").collect::<Vec<&str>>();
     let s_b = b.split("").collect::<Vec<&str>>();
