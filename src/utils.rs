@@ -64,7 +64,7 @@ fn trigrams(s: &str) -> Vec<Vec<char>> {
     res
 }
 
-pub fn trigram_fuzzy_compare(a: &str, b: &str) -> f32 {
+pub fn trigram_fuzzy_search(a: &str, b: &str) -> f32 {
     let string_len = a.chars().count() + 1;
 
     let trigrams_a = trigrams(a);
@@ -81,10 +81,10 @@ pub fn trigram_fuzzy_compare(a: &str, b: &str) -> f32 {
     }
     let res = acc / (string_len as f32);
 
-    if (0.0f32..=1.0f32).contains(&res) {
+    if (0f32..=1f32).contains(&res) {
         res
     } else {
-        0.0f32
+        0f32
     }
 }
 pub fn contains_fuzzy_search(a: &str, b: &str) -> f32 {
@@ -104,9 +104,9 @@ pub fn contains_fuzzy_search(a: &str, b: &str) -> f32 {
     }
 
     let res = a_len as f32 / acc as f32 ;
-    if (0.0f32..=1.0f32).contains(&res) {
+    if (0f32..=1f32).contains(&res) {
         1f32 - res
     } else {
-        0.0f32
+        0f32
     }
 }

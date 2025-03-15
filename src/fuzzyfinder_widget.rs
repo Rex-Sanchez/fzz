@@ -171,6 +171,14 @@ impl FzzWidgetState {
             threshold: f64,
             delim: char,
         }
+        impl Data {
+            fn search_text(&self) -> String {
+                if !self.case_sensative {
+                    return self.search_text.to_lowercase();
+                }
+                return self.search_text.clone();
+            }
+        }
 
         Job::new(Data {
             list: self.stdin.clone(),
@@ -202,9 +210,9 @@ impl FzzWidgetState {
 
                     let score = if !s.search_text.is_empty() {
                         if s.search_text.len() < 3 {
-                            contains_fuzzy_search(&s.search_text, &value) as f64
+                            contains_fuzzy_search(&s.search_text(), &value) as f64
                         } else {
-                            trigram_fuzzy_search(&s.search_text, &value) as f64
+                            trigram_fuzzy_search(&s.search_text(), &value) as f64
                         }
                     } else {
                         0.0
